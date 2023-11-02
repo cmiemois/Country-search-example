@@ -1,13 +1,16 @@
-import React, { useEffect, useState } from 'react';
-import logo from './logo.svg';
+import { useEffect, useState } from 'react';
 import './App.css';
 
-const BASE_URL: URL = new URL('https://restcountries.com/v3.1/');
 
 function App() {
   const [loading, setLoading] = useState(true);
-  const [data, setData] = useState<any[]>([]);
+  const [data, setData] = useState<Array<Object>>([]);
   const [error, setError] = useState(null);
+  const [continentParam, setContinentParam] = useState('All');
+  const searchParam = useState(['capital', 'name']);
+  const [query, setQuery] = useState('');
+
+
 
   useEffect(() => {
     fetch('https://restcountries.com/v3.1/all')
@@ -25,6 +28,21 @@ function App() {
       );
   }, []);
 
+  function search(countries: any) {
+    // I attempted to make a text search work but was unsuccessful
+    return countries.filter((country: any) => {
+        if (country.continents.includes(continentParam)) {
+            return searchParam.some((newItem: any) => {
+                return country;
+            });
+        } else if (continentParam === "All") {
+            return searchParam.some((newItem: any) => {
+                return country;
+            });
+        }
+    });
+}
+
 
   if (error) {
     return (<>{error['message']}</>);
@@ -34,12 +52,38 @@ function App() {
   } else {
     return (
       <div className="wrapper">
+
+        <div className="searchWrapper">
+          <label htmlFor='search-form'>
+            <input
+              type="search"
+              name="search-form"
+              className="search-input"
+              placeholder="BROKEN: Search country by name"
+              value={query}
+              onChange={e => setQuery(e.target.value)}></input>
+          </label>
+        </div>
+
+        <div className='select'>
+          <select aria-label='Filter by continent'
+            onChange={(e) => { setContinentParam(e.target.value) }}>
+            <option value="All">Filter By Region</option>
+            <option value="Africa">Africa</option>
+            <option value="North America">North America</option>
+            <option value="South America">South America</option>
+            <option value="Asia">Asia</option>
+            <option value="Europe">Europe</option>
+            <option value="Oceania">Oceania</option>
+          </select>
+        </div>
+
         <ul className="card-grid">
-          {data.map((country) => (
+          {search(data).map((country: any) => (
             <li>
               <article className="card" key={country.ccn3}>
                 <div className="card-image">
-                  <img id="flag" src={country.flags.svg} alt={country.name.common} />
+                  <img id="flag" src={country.flags.svg} alt={country.flags.alt} />
                 </div>
                 <div className="card-content">
                   <h2 className="card-name">{country.name.common}</h2>

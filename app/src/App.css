@@ -18,6 +18,16 @@
   max-width: 150px;
   width: auto;
   height: auto;
+  padding-left: 1em;
+  padding-top: 1em;
+}
+
+.select {
+  align-self: right;
+}
+
+.search-wrapper {
+  display: grid;
 }
 
 .card-grid {
@@ -26,7 +36,17 @@
   grid-gap: 40px;
 }
 
-ul {
+.card {
+  background-color: rgb(224, 222, 222);
+  border-radius: 5px;
+}
+
+.card-content {
+  padding: 1em;
+}
+
+
+ul, ol {
   list-style: none;
 }
 
