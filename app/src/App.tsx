@@ -53,6 +53,8 @@ function App() {
     return country.filter((country: any) => {
       if (country.continents.includes(continentParam)) {
         return country;
+      } else {
+        return null;
       }
     })
   }
