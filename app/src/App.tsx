@@ -4,51 +4,67 @@ import './App.css';
 
 const BASE_URL: URL = new URL('https://restcountries.com/v3.1/');
 
-function Button() {
-  const [loading, isloaded] = useState(true);
-  const [data, datapoints] = useState([]);
+function App() {
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState<any[]>([]);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch(BASE_URL+'all').then(res => res.json());
-    
-    // Add the stuff, make the stuff do the thing
+    fetch('https://restcountries.com/v3.1/all')
+      .then(res => res.json())
+      .then(
+        (result) => {
+          setLoading(false);
+          setData(result);
+        },
+
+        (error) => {
+          setLoading(false);
+          setError(error);
+        }
+      );
   }, []);
 
-  if (loading) {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <p>
-            <button onClick={getFullList}>Load from API</button>
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>);
+
+  if (error) {
+    return (<>{error['message']}</>);
+  }
+  else if (loading) {
+    return (<>Loading</>);
   } else {
     return (
-      <div>
+      <div className="wrapper">
+        <ul className="card-grid">
+          {data.map((country) => (
+            <li>
+              <article className="card" key={country.ccn3}>
+                <div className="card-image">
+                  <img src={country.flag} alt={country.name.common} />
+                </div>
+                <div className="card-content">
+                  <h2 className="card-name">{country.name.common}</h2>
+                  <ol className="card-list">
+                    <li>
+                      population:{" "}
+                      <span>{country.population}</span>
+                    </li>
+                    <li>
+                      Region: <span>{country.region}</span>
+                    </li>
+                    <li>
+                      Capital: <span>{country.capital}</span>
+                    </li>
+                  </ol>
+                </div>
+              </article>
+            </li>
+
+          ))}
+        </ul>
       </div>
     );
   }
-}
 
-function App() {
-
-  return (
-    <div><p>Hello, I am placeholder</p></div>
-  );
-}
-
-async function getFullList(): Promise<Object> {
-  const response = await fetch(BASE_URL + 'all');
-  return response;
 }
 
 export default App;
