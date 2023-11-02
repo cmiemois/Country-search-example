@@ -30,6 +30,7 @@ function App() {
 
   function search(countries: any) {
     // I attempted to make a text search work but was unsuccessful
+    // eslint-disable-next-line array-callback-return
     return countries.filter((country: any) => {
         if (country.continents.includes(continentParam)) {
             return searchParam.some((newItem: any) => {
