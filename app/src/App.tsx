@@ -39,7 +39,7 @@ function App() {
             <li>
               <article className="card" key={country.ccn3}>
                 <div className="card-image">
-                  <img src={country.flag} alt={country.name.common} />
+                  <img id="flag" src={country.flags.svg} alt={country.name.common} />
                 </div>
                 <div className="card-content">
                   <h2 className="card-name">{country.name.common}</h2>
