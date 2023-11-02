@@ -9,6 +9,7 @@ function App() {
   const [continentParam, setContinentParam] = useState('All');
   const searchParam = useState(['capital', 'name']);
   const [query, setQuery] = useState('');
+  const [countryNameSelected, setCountryNameSelected] = useState('');
 
 
 
@@ -32,17 +33,29 @@ function App() {
     // I attempted to make a text search work but was unsuccessful
     // eslint-disable-next-line array-callback-return
     return countries.filter((country: any) => {
-        if (country.continents.includes(continentParam)) {
-            return searchParam.some((newItem: any) => {
-                return country;
-            });
-        } else if (continentParam === "All") {
-            return searchParam.some((newItem: any) => {
-                return country;
-            });
+      if (country.continents.includes(continentParam)) {
+        if (country.name.common.includes(countryNameSelected)) {
+          return searchParam.some((newItem: any) => {
+            return country;
+          });
         }
+      } else if (continentParam === "All") {
+        if (country.name.common.includes(countryNameSelected)) {
+          return searchParam.some((newItem: any) => {
+            return country;
+          });
+        }
+      }
     });
-}
+  }
+
+  function regionFilter(country: any) {
+    return country.filter((country: any) => {
+      if (country.continents.includes(continentParam)) {
+        return country;
+      }
+    })
+  }
 
 
   if (error) {
@@ -68,7 +81,11 @@ function App() {
 
         <div className='select'>
           <select aria-label='Filter by continent'
-            onChange={(e) => { setContinentParam(e.target.value) }}>
+            onChange={(e) => {
+              setContinentParam(e.target.value);
+              setCountryNameSelected('');
+            }}
+          >
             <option value="All">Filter By Region</option>
             <option value="Africa">Africa</option>
             <option value="North America">North America</option>
@@ -76,8 +93,18 @@ function App() {
             <option value="Asia">Asia</option>
             <option value="Europe">Europe</option>
             <option value="Oceania">Oceania</option>
+            <option value="Antartica">Antartica</option>
           </select>
         </div>
+
+        <select aria-label='Select country'
+          onChange={(e) => setCountryNameSelected(e.target.value)}
+        >
+          <option value="">Select Country</option>
+          {regionFilter(data).map((country: any) => (
+            <option value={country.name.common}>{country.name.common}</option>
+          ))}
+        </select>
 
         <ul className="card-grid">
           {search(data).map((country: any) => (
@@ -98,6 +125,9 @@ function App() {
                     </li>
                     <li>
                       Capital: <span>{country.capital}</span>
+                    </li>
+                    <li>
+                      Independent: <span>{(country.independent ? "Yes" : "No")}</span>
                     </li>
                   </ol>
                 </div>
