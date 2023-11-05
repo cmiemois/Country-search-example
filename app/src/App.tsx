@@ -7,7 +7,7 @@ function App() {
   const [data, setData] = useState<Array<Object>>([]);
   const [error, setError] = useState(null);
   const [continentParam, setContinentParam] = useState('All');
-  const searchParam = useState(['capital', 'name']);
+  const searchParam = useState(['name']);
   const [query, setQuery] = useState('');
   const [countryNameSelected, setCountryNameSelected] = useState('');
 
@@ -31,10 +31,15 @@ function App() {
 
   function search(countries: any) {
     // I attempted to make a text search work but was unsuccessful
+    const searchString = query;
+
     // eslint-disable-next-line array-callback-return
     return countries.filter((country: any) => {
-      if (country.continents.includes(continentParam)) {
-        if (country.name.common.includes(countryNameSelected)) {
+      if (
+        country.continents.includes(continentParam) &&
+        country.name.common.includes(countryNameSelected)
+      ) {
+        if (country.name.common.toLowerCase().includes(searchString.toLowerCase())) {
           return searchParam.some((newItem: any) => {
             return country;
           });
@@ -42,7 +47,9 @@ function App() {
       } else if (continentParam === "All") {
         if (country.name.common.includes(countryNameSelected)) {
           return searchParam.some((newItem: any) => {
-            return country;
+            if (country.name.common.toLowerCase().includes(searchString.toLowerCase())) {
+              return country;
+            }
           });
         }
       }
@@ -75,7 +82,7 @@ function App() {
               type="search"
               name="search-form"
               className="search-input"
-              placeholder="BROKEN: Search country by name"
+              placeholder="Search country by name"
               value={query}
               onChange={e => setQuery(e.target.value)}></input>
           </label>
@@ -86,6 +93,7 @@ function App() {
             onChange={(e) => {
               setContinentParam(e.target.value);
               setCountryNameSelected('');
+              setQuery('');
             }}
           >
             <option value="All">Filter By Region</option>
@@ -100,7 +108,10 @@ function App() {
         </div>
 
         <select aria-label='Select country'
-          onChange={(e) => setCountryNameSelected(e.target.value)}
+          onChange={(e) => {
+            setCountryNameSelected(e.target.value)
+            setQuery('');
+          }}
         >
           <option value="">Select Country</option>
           {regionFilter(data).map((country: any) => (
