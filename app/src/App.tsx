@@ -95,7 +95,7 @@ function App() {
             <option value="Asia">Asia</option>
             <option value="Europe">Europe</option>
             <option value="Oceania">Oceania</option>
-            <option value="Antartica">Antartica</option>
+            <option value="Antartic">Antartic</option>
           </select>
         </div>
 
@@ -113,7 +113,7 @@ function App() {
             <li>
               <article className="card" key={country.ccn3}>
                 <div className="card-image">
-                  <img id="flag" src={country.flags.svg} alt={country.flags.alt} />
+                  <img id="flag" src={country.flags.svg} title={country.flags.title? country.flags.title : country.flags.alt} alt={country.flags.alt}/>
                 </div>
                 <div className="card-content">
                   <h2 className="card-name">{country.name.common}</h2>
